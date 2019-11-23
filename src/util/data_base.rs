@@ -1,5 +1,5 @@
 use diesel::prelude::{SqliteConnection};
-use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
 
 pub struct DataBase {
     pub pool: Pool<ConnectionManager<SqliteConnection>>,
@@ -12,5 +12,8 @@ impl DataBase{
         let pool = Pool::builder().build(manager).expect("连接池创建失败.");
         DataBase {pool: pool.clone() }
     }
-    //pub fn getpool
+    /// Get a connection; 获得一个连接
+    pub fn get_conn(&self) -> PooledConnection<ConnectionManager<SqliteConnection>>{
+        self.pool.get().unwrap()
+    }
 }
