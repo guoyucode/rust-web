@@ -1,5 +1,6 @@
 use actix_web::{HttpResponse};
 use serde::export::fmt::Debug;
+use std::error::Error;
 
 #[derive(Debug, Serialize)]
 pub struct Response<DATA>
@@ -23,8 +24,8 @@ pub fn response_ok<T>(v: T) -> HttpResponse
 }
 
 /// Return error; 返回错误
-pub fn response_error<T>(err: T) -> HttpResponse
-    where T: std::fmt::Debug + std::string::ToString,
+pub fn response_error<E>(err: E) -> HttpResponse
+    where E: Error,
 {
     let res = Response {
         msg: err.to_string(),
@@ -37,7 +38,7 @@ pub fn response_error<T>(err: T) -> HttpResponse
 /// Return value judgment; 返回值判断
 pub fn response_match<V, E>(result: Result<V, E>) -> HttpResponse
     where V: std::fmt::Debug + serde::Serialize,
-          E: std::fmt::Debug + std::string::ToString,
+          E: Error,
 {
     match result {
         Ok(v) => response_ok(v),
