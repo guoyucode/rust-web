@@ -19,7 +19,7 @@ fn main() -> std::io::Result<()> {
             .data(DataBase::new("jygo.db")) // 数据库
             .wrap(middleware::Logger::default()) // 日志
             .wrap(middleware::DefaultHeaders::new().header("content-type", "text/html;charset=utf-8"))
-            .service(web::resource("/user_list").route(web::get().to_async(api::user_api::list))) // 查询用户
+            .service(web::resource("/user_list").route(web::get().to(api::user_api::list))) // 查询用户
             .service(fs::Files::new("/", "static/").index_file("index.html"))
     })
     .bind("0.0.0.0:8080").expect("端口可能被占用了!")
