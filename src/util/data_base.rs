@@ -12,4 +12,5 @@ impl DataBase{
         let pool = Pool::builder().build(manager).expect("连接池创建失败.");
         DataBase {pool: pool.clone() }
     }
+    //pub fn getpool
 }

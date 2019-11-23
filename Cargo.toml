@@ -12,5 +12,6 @@ actix-files = "0.2.0-alpha.1"
 actix-web-actors = "1.0.3"
 qstring = "0.7.0"
 diesel = { version = "1.4.3", features = ["sqlite", "r2d2"] }
-serde = "1.0.102"
+# serde = "1.0.102"
+serde = { version = "1.0.102", features = ["derive"] }
 
