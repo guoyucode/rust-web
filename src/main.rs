@@ -10,6 +10,8 @@ mod model;
 mod api;
 mod util;
 
+use util::{web_deps, database_deps};
+
 fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=debug,actix_web=debug");
     env_logger::init();
@@ -35,8 +37,8 @@ fn route() -> Scope {
                 .route("/save", web::post().to(api::user_api::save)) // save
         )
         .service( // scope demo
-            web::scope("/user2") // user api
-                .route("/list", web::get().to(api::user_api::list)) // query
-                .route("/save", web::post().to(api::user_api::save)) // save
+                  web::scope("/user2") // user api
+                      .route("/list", web::get().to(api::user_api::list)) // query
+                      .route("/save", web::post().to(api::user_api::save)) // save
         )
 }

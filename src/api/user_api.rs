@@ -1,8 +1,4 @@
-use actix_web::{HttpRequest, HttpResponse, web::Data, web::Json};
-use diesel::{Connection};
-use qstring::QString;
-
-use crate::util::DataBase;
+use crate::web_deps::*;
 use crate::model::user;
 
 pub async fn list(db: Data<DataBase>, req: HttpRequest) -> HttpResponse {

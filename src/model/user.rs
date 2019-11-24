@@ -1,6 +1,5 @@
 use self::t_user::dsl::*;
-use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, PooledConnection};
+use crate::database_deps::*;
 
 // 定义实体
 #[derive(Queryable, Insertable, Debug, Serialize, Deserialize, Clone)]
