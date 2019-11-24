@@ -19,10 +19,14 @@ table! {
 }
 
 pub fn insert(conn: &PooledConnection<ConnectionManager<SqliteConnection>>, user: &User)
-              -> Result<usize, diesel::result::Error> {
-    diesel::insert_into(t_user)
+              -> Result<User, diesel::result::Error> {
+    let result = diesel::insert_into(t_user)
         .values(user)
-        .execute(conn)
+        .execute(conn);
+    match result{
+        Ok(_v) => Ok(user.clone()),
+        Err(e) => Err(e),
+    }
 }
 
 
