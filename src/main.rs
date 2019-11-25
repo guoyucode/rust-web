@@ -4,11 +4,12 @@ extern crate diesel;
 extern crate serde;
 
 use actix_files as fs;
-use actix_web::{middleware, App, HttpServer, web, Scope};
+use actix_web::{middleware, App, HttpServer};
 
-mod model;
-mod api;
-mod util;
+mod model; /// 实体
+mod api; /// 接口
+mod util; /// 工具
+mod route; /// 路由
 
 use util::{web_deps, database_deps};
 
@@ -21,24 +22,10 @@ fn main() -> std::io::Result<()> {
             .data(util::DataBase::new("jygo.db")) // 数据库
             .wrap(middleware::Logger::default()) // 日志
             .wrap(middleware::DefaultHeaders::new().header("content-type", "appliction/json;charset=utf-8"))
-            .service(route())
+            .service(route::route())
             .service(fs::Files::new("/", "static/").index_file("index.html"))
     })
+        .workers(3)
         .bind("0.0.0.0:8080").expect("端口可能被占用了!")
         .run()
-}
-
-/// Routing definition; 路由定义
-fn route() -> Scope {
-    web::scope("/rust_web")
-        .service(
-            web::scope("/user") // user api
-                .route("/list", web::get().to(api::user_api::list)) // query
-                .route("/save", web::post().to(api::user_api::save)) // save
-        )
-        .service( // scope demo
-                  web::scope("/user2") // user api
-                      .route("/list", web::get().to(api::user_api::list)) // query
-                      .route("/save", web::post().to(api::user_api::save)) // save
-        )
 }
