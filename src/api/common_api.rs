@@ -13,6 +13,17 @@ where
     data: DATA,
 }
 
+#[derive(Debug, Serialize)]
+pub struct ResponsePageData<DATA>
+    where
+        DATA: Debug + Serialize,
+{
+    pub index: Option<i64>,
+    pub limit: Option<i64>,
+    pub total: i64,
+    pub data: DATA,
+}
+
 /// Return the correct value; 返回正确的值
 pub fn response_ok<T>(v: T) -> HttpResponse
     where T: Debug + Serialize {
