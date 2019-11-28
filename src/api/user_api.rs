@@ -13,13 +13,14 @@ use diesel::result::Error;
 pub async fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> Response {
     println!("/list");
 
+    let index = params.index.to_owned().unwrap_or(1);
     let limit = params.limit.to_owned().unwrap_or(100);
     let keyword = params.keyword.to_owned().unwrap_or(String::from(""));
     let offset = params.offset().to_owned();
 
     let conn = db.get_conn();
 
-    let query = ||{
+    let query = || {
         let mut q = user::t_user.into_boxed(); // 构建查询表达式
         if keyword != "" { q = q.filter(user::name.eq(keyword.clone())); }
         q = q.order(user::id.asc());
@@ -29,24 +30,12 @@ pub async fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> 
     let count_result = query().count().get_result::<i64>(&conn);
     let count = count_result.unwrap_or(0);
 
-   let result = query()
+    let result = query()
         .offset(offset)
         .limit(limit)
         .load::<user::User>(&conn);
 
-    match result {
-        Err(e) => super::response_error(e),
-        Ok(v) => {
-            let p = params.clone();
-            let page_data = super::common_api::ResponsePageData {
-                index: p.index.to_owned(),
-                limit: p.limit.to_owned(),
-                total: count,
-                data: v,
-            };
-            super::response_ok(page_data)
-        }
-    }
+    super::response_page_match(result, index, limit, count)
 }
 
 pub async fn save(db: Data<DataBase>, u: Json<user::User>) -> Response {
