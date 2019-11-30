@@ -28,14 +28,14 @@ pub async fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> 
     };
 
     let count_result = query().count().get_result::<i64>(&conn);
-    let count = count_result.unwrap_or(0);
+    let total = count_result.unwrap_or(-1);
 
     let result = query()
         .offset(offset)
         .limit(limit)
         .load::<user::User>(&conn);
 
-    super::response_page_match(result, index, limit, count)
+    super::response_page_match(result, index, limit, total)
 }
 
 pub async fn save(db: Data<DataBase>, u: Json<user::User>) -> Response {
