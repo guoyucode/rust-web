@@ -10,7 +10,7 @@ const JSON_TYPE: &str = "application/json; charset=utf-8";
 // const HTML_TYPE: &str = "text/html; charset=utf-8";
 
 #[derive(Debug, Serialize)]
-struct Response<DATA>
+pub struct Response<DATA>
 where
     DATA: Debug + Serialize,
 {

@@ -1,28 +1,30 @@
-use crate::web_deps::*;
 use crate::database_deps::*;
 use crate::model;
 use crate::model::user;
-use std::ops::Deref;
+use crate::web_deps::*;
 use diesel::result::Error;
+use std::ops::Deref;
 
 ///     let qs = QString::from(req.query_string());
 ///    let limit: i64 = qs.get("limit").unwrap_or("100").parse().unwrap_or(100);
 ///    let offset: i64 = qs.get("offset").unwrap_or("0").parse().unwrap_or(0);
 ///    let keyword = qs.get("keyword").unwrap_or("");
 /// 参数非必填
-pub async fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> Response {
+pub fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> Response {
     println!("/list");
 
     let index = params.index.to_owned().unwrap_or(1);
     let limit = params.limit.to_owned().unwrap_or(100);
-    let keyword = params.keyword.to_owned().unwrap_or(String::from(""));
+    let keyword = params.keyword.to_owned();
     let offset = params.offset().to_owned();
 
     let conn = db.get_conn();
 
     let query = || {
         let mut q = user::t_user.into_boxed(); // 构建查询表达式
-        if keyword != "" { q = q.filter(user::name.eq(keyword.clone())); }
+        if keyword != "" {
+            q = q.filter(user::name.eq(keyword.clone()));
+        }
         q = q.order(user::id.asc());
         q
     };
@@ -38,7 +40,7 @@ pub async fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> 
     super::response_page_match(result, index, limit, total)
 }
 
-pub async fn save(db: Data<DataBase>, u: Json<user::User>) -> Response {
+pub fn save(db: Data<DataBase>, u: Json<user::User>) -> Response {
     println!("/save");
     let conn = db.get_conn();
     // Transaction-based code; 基于事务的代码
@@ -56,5 +58,3 @@ pub async fn save(db: Data<DataBase>, u: Json<user::User>) -> Response {
     });
     super::response_match(result)
 }
-
-

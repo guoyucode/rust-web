@@ -5,11 +5,10 @@ authors = ["planet0104 <planet0104@gmail.com>", "guoyu <guoyumail@qq.com>"]
 edition = "2018"
 
 [dependencies]
-actix-web = "2.0.0-alpha.1"
+actix-web = "1.0.9"
 env_logger = "0.7.1"
-actix-files = "0.2.0-alpha.1"
+actix-files = "0.1.7"
 actix-web-actors = "1.0.3"
 qstring = "0.7.0"
 diesel = { version = "1.4.3", features = ["sqlite", "r2d2"] }
 serde = { version = "1.0.102", features = ["derive"] }
-

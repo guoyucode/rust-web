@@ -1,0 +1,12 @@
+GET http://127.0.0.1:8080
+Accept: application/json
+
+###
+###
+GET http://127.0.0.1:8080/rust_web/user/list?keyword2=guoyu&index=1&limit=10
+Accept: */*
+Cache-Control: no-cache
+Content-Type: appliction/json;charset=utf-8
+
+###
+
