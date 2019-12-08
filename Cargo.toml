@@ -12,3 +12,4 @@ actix-web-actors = "1.0.3"
 qstring = "0.7.0"
 diesel = { version = "1.4.3", features = ["sqlite", "r2d2"] }
 serde = { version = "1.0.102", features = ["derive"] }
+futures = "0.1.29"

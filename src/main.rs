@@ -12,6 +12,9 @@ mod model;
 mod route;
 mod util;
 
+use actix_web::dev::Service;
+use futures::future::Future;
+use std::borrow::BorrowMut;
 use util::{database_deps, web_deps};
 
 fn main() -> std::io::Result<()> {
@@ -21,8 +24,32 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(util::DataBase::new("jygo.db")) // 数据库
+            .wrap_fn(|req, srv| {
+                println!("Hi from start. You requested: {}", req.path());
+                let token = req.headers().get("token");
+                let token = match token {
+                    Some(v) => {
+                        if v.is_empty() {
+                            ""
+                        } else {
+                            v.to_str().unwrap_or("")
+                        }
+                    }
+                    None => "",
+                };
+                println!("token: {}", token);
+                srv.call(req).map(|res| {
+                    println!("Hi from response");
+                    /* res.map_body(|h, b| b);
+                    if token == "" {
+                        let error1 = actix_web::error::ErrorBadGateway("not token");
+                        return res.error_response(error1);
+                    }*/
+                    return res;
+                })
+            })
             .wrap(ErrorHandlers::new().handler(
-                http::StatusCode::from_u16(500).unwrap(),
+                http::StatusCode::from_u16(400).unwrap(),
                 api::error_handler::render_400,
             ))
             .wrap(ErrorHandlers::new().handler(
