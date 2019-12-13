@@ -15,7 +15,7 @@ pub fn list(db: Data<DataBase>, params: Query<model::CommonFormParam>) -> Respon
 
     let index = params.index.to_owned().unwrap_or(1);
     let limit = params.limit.to_owned().unwrap_or(100);
-    let keyword = params.keyword.to_owned();
+    let keyword = params.keyword.to_owned().unwrap_or("".parse().unwrap());
     let offset = params.offset().to_owned();
 
     let conn = db.get_conn();

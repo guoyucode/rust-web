@@ -2,7 +2,7 @@
 pub struct CommonFormParam {
     pub index: Option<i64>,
     pub limit: Option<i64>,
-    pub keyword: String,
+    pub keyword: Option<String>,
 }
 
 impl CommonFormParam {
